@@ -20,3 +20,9 @@ class CollectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Collection
         fields = ['name', 'images']
+
+
+class CollectionNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Collection
+        fields = ['name']
