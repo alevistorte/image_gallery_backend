@@ -10,8 +10,11 @@ django-debug-toolbar = "*"
 djangorestframework = "*"
 django-filter = "*"
 django-cors-headers = "*"
+beautifulsoup4 = "*"
+requests = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.10"

@@ -9,6 +9,19 @@ def get_slug(array: list[str]) -> str:
 
     return string[:-1]
 
+
+def get_products_overview(keywords: str) -> list[object]:
+    search_url = 'https://www.cgtrader.com/3d-models?keywords=' + \
+        keywords.replace(' ', '+') + "+jewelry"
+    page_content = requests.get(search_url)
+    soup = BeautifulSoup(page_content.text, 'html.parser')
+    main_images = soup.select('img.item-main-image')
+    urls = soup.select('a.content-box__link')
+    # main_images = []
+    # return [{'images': len(main_images), 'urls': len(urls)}]
+    return list(map(lambda img, url: {'image': img['data-src'], 'url': url.attrs['href']}, main_images, urls))
+
+
 # Search for items
 
 
@@ -49,6 +62,7 @@ def get_product_info(url: str, collection: str) -> object:
         }
 
     return None
+
 
 #  Add item to DB
 
