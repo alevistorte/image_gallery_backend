@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from rest_framework import status
 from django.http import HttpResponse, HttpRequest, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .scraper import cgt_search, get_products_overview
-
+from .scraper import cgt_search, get_products_overview, get_product_info
+from photos.serializers import AddImageSerializer
 # Create your views here.
 
 
@@ -11,8 +12,17 @@ from .scraper import cgt_search, get_products_overview
 def save_product(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         data = json.loads(request.body)['data']
+        product_info = get_product_info(
+            url=data['url'], collection=data['collection'])
 
-        return HttpResponse('Post request detected')
+        if product_info is not None:
+            serializer = AddImageSerializer(data=product_info)
+            if serializer.is_valid():
+                serializer.save()
+                return HttpResponse(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                print(serializer.errors)
+                return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return HttpResponseNotFound('This is a GET request')
 
